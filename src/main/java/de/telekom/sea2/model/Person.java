@@ -46,6 +46,10 @@ public class Person extends BaseObject{
         this.nachname= nachname;
     }
 	
+	public void setKundennummer (long kdnr) {
+        this.kundennummer=kdnr;
+    }
+	
 	public void setKundennummer () {
         this.kundennummer=getId();
     }
