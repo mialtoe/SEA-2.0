@@ -1,6 +1,6 @@
 package de.telekom.sea2.model;
 
-//import de.telekom.sea2.*;
+
 import de.telekom.sea2.lookup.*;
 import de.telekom.sea2.seminar.*;
 
@@ -26,9 +26,11 @@ public class Person extends BaseObject{
 		this.vorname = vorname;
 		this.nachname = nachname;
 		this.kundennummer= kdnr;
-		setId(kdnr+1);
+//		setId(kdnr+1);
 		this.anrede=anrede;
 	}
+	
+	
 	
 	public Salutation getAnrede() {
 		return anrede;
@@ -36,6 +38,10 @@ public class Person extends BaseObject{
 
 	public void setAnrede(Salutation anrede) {
 		this.anrede = anrede;
+	}
+	
+	public void setAnrede(byte b) {
+		this.anrede = Salutation.fromByte(b);
 	}
 	
 	public void setVorname (String vorname) {
