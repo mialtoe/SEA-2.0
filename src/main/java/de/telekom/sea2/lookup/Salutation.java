@@ -31,5 +31,23 @@ public enum Salutation {
 		     default:      throw new IllegalArgumentException("Unexpected value:");   // default kann praktisch nie eintreten.
 			 }
 		 }
+		 
+		 public byte toByte() {
+			 switch (this) {
+			 case HERR:  return 1;
+			 case FRAU:  return 2;
+			 case DIVERS: return 3;
+			 default:      throw new IllegalArgumentException("Unexpected value:");   // default kann praktisch nie eintreten.
+			 }
+		 }
+		 
+		 public static Salutation fromByte(Byte b) {
+			 switch (b) {
+			 case 1:   return HERR;
+			 case 2:   return FRAU;
+			 case 3:   return DIVERS;
+			 default:      throw new IllegalArgumentException("Unexpected value:");   // default kann praktisch nie eintreten.
+			 }
+		 }
 	
 }

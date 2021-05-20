@@ -38,19 +38,37 @@ public class SeminarApp extends BaseObject{
 		   
 //		   Testblock Teilnehmer in DB schreiben:
 //		   *************************************
-//		   Person teilnehmer1 = new Person("Pauline","Meier",99,HERR);
+//		   Person teilnehmer1 = new Person("Pauline","Meier",99,FRAU);
+//		   Person teilnehmer1 = new Person("Hans","Meiser",98,HERR);
+		   
 //		    Boolean cr = personRepository.create(teilnehmer1);
 		   
 		   
 //		   Testblock Teilnehmer aus DB lesen:
 //		   *************************************
 		   
-		   Person p1 = personRepository.get(77);
+		   Person p1 = personRepository.get(98);
 		   
 		   if (p1.getKundennummer() != null)
            	   System.out.println(p1.getVorname()+" "+p1.getNachname()+" "+p1.getKundennummer()+" "+p1.getAnrede());
 		   else
 			   System.out.println("Kunde mit ID nicht gefunden");
+		   
+		   
+		   Person[] pListe = personRepository.getAll();
+		   System.out.println("Aktuelle Komplettliste in DB");
+		   for (int i=0; i < pListe.length; i++) {
+			   try {
+					Person p = (Person) pListe[i];   // zeigt nur gültige Einträge an
+					System.out.println(i + ".: " + p.getAnrede() + " " + p.getVorname() + " " + p.getNachname()+" Kundennummer: "+p.getKundennummer());
+				}
+				catch (RuntimeException re) {    // wenn Null Eintrag in Liste oder ungültig
+				   System.out.println("Index "+i+" kein gültiger Eintrag gefunden");
+				}
+		   }
+		   
+		   
+		   System.out.println(" hoechsteKDNR in DB:" + personRepository.getMaxId());
 		   
 //		   Testblock Teilnehmer löschen aus DB :
 //		   *************************************
@@ -59,8 +77,8 @@ public class SeminarApp extends BaseObject{
 				   
 //		   Testblock Teilnehmer löschen aus DB :
 //		   *************************************
-		   Person teilnehmer1 = new Person("Pauline","Meier",99,HERR);
-		   personRepository.delete(teilnehmer1);
+//		   Person teilnehmer1 = new Person("Pauline","Meier",99,HERR);
+//		   personRepository.delete(teilnehmer1);
 			   
 		   
 		   

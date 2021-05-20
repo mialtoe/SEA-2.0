@@ -38,6 +38,10 @@ public class Person extends BaseObject{
 		this.anrede = anrede;
 	}
 	
+	public void setAnrede(byte b) {
+		this.anrede = Salutation.fromByte(b);
+	}
+	
 	public void setVorname (String vorname) {
         this.vorname= vorname;
     }
