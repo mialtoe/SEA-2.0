@@ -1,19 +1,14 @@
 package de.telekom.sea2.ui;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import de.telekom.sea2.model.*;
 import de.telekom.sea2.persistance.*;
 import de.telekom.sea2.lookup.*;
-import de.telekom.sea2.*;
 import de.telekom.sea2.seminar.*;
 import java.sql.SQLException;
 
 
-//public class Menu implements MyMenu, EventListener{
+
 public class Menu extends BaseObject {
 
 	
@@ -25,11 +20,7 @@ public class Menu extends BaseObject {
 	public Menu(PersonRepository pRepo) {         // neuer Konstruktor mit Übergabe
 		this.pRepo  = pRepo;
 	}
-		
 	
-//	public void setMyList(MyList myList) {   // alter Konstruktor
-//		this.myList = myList;
-//	}
 
 	public void keepAsking() throws IOException,Exception {
 		
@@ -64,6 +55,18 @@ public class Menu extends BaseObject {
 		System.out.println("********************************");
 	}
 
+	private void showAenderungsMenu() {
+		// was soll geändert werden?
+			
+		System.out.println("********************************");
+		System.out.println("* Änderungs-Menü:              *");
+		System.out.println("* Was soll geändert werden?    *");
+		System.out.println("* 1 - Anrede                   *");
+		System.out.println("* 2 - Vorname                  *");
+		System.out.println("* 3 - Nachname                 *");
+		System.out.println("********************************");
+	}
+	
 	private String inputMenu() {
 		return scanner.nextLine();
 	}
@@ -95,6 +98,29 @@ public class Menu extends BaseObject {
 		}
 	}
 
+	private String checkAenderungsMenu(String eingabe) throws IOException, Exception, SQLException {
+		String rc;
+		switch (eingabe) {
+		case "1":
+			   System.out.println("neue Anrede eingeben: ");
+			   rc=inputMenu();
+ 			   break;
+		case "2":
+			   System.out.println("neuen Vornamen eingeben: ");
+			   rc=inputMenu();
+			   break;
+		case "3":
+			   System.out.println("neuen Nachnamen eingeben: ");
+			   rc=inputMenu();
+			   break;
+		default:
+			   System.out.println("falsche Eingabe");
+			   rc="";
+		}
+		return rc;
+	}
+
+	
 	
 	private void removePerson() throws SQLException {
 		System.out.print("Bitte zu löschende ID eingeben: ");
@@ -174,31 +200,45 @@ public class Menu extends BaseObject {
 //		listAllPerson(suchList); 
 //	}
 	
-	private void updatePerson() throws SQLException {
-		String vorname;
-		String nachname;
+	private void updatePerson() throws Exception {
 		Salutation anrede;
 		
 		System.out.print("Bitte ID der zu ändernden Person eingeben: ");
 		int id = scanner.nextInt();
 		scanner.nextLine();
 		
-		System.out.print("Bitte Anrede eingeben: ");
-		try {
-		  	  anrede = Salutation.fromString(scanner.nextLine());
-		} catch (IllegalArgumentException e){
-			System.out.println("Falsche Eingabe, nur Frau/Herr/divers erlaubt");
-			return;
-		}
-		System.out.print("Bitte neuen Vorname eingeben: ");
-		vorname = scanner.nextLine();
-		System.out.print("Bitte neuen Nachnamen eingeben: ");
-		nachname = scanner.nextLine();
+		Person p = pRepo.get(id);
+		if (p.getKundennummer() != null) {
 		
-		Person p = new Person(vorname,nachname,id,anrede);
-				
-		Boolean success = pRepo.update(p);
+   		   anrede = p.getAnrede();
+		   System.out.println("Zu ändernder Datensatz: ID "+ p.getKundennummer()+" "+anrede+" "+p.getVorname()+" "+p.getNachname());
+		   showAenderungsMenu();
+		
+		   result = inputMenu();
+		   try {
+			   String aenderung = checkAenderungsMenu(result);
+			   System.out.println("geänderter Text:"+aenderung);
+			   switch (result) {
+			   case "1":
+				   p.setAnrede(Salutation.fromString(aenderung));
+				   break;
+			   case "2":
+				  p.setVorname(aenderung);
+				  break;
+		   	   case "3":
+				  p.setNachname(aenderung);
+				  break;
+		       default:
+		       }
+			   	
+			   pRepo.update(p);
+		    	  
+		   } catch (IOException e) {
+			   e.printStackTrace();}
+		 } else 
+			 System.out.println("ID nicht gefunden!");
 	}
+
 				
 //	@Override
 //	public void close() {

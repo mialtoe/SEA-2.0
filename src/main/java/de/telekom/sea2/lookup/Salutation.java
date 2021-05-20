@@ -1,7 +1,5 @@
 package de.telekom.sea2.lookup;
 
-//import de.telekom.sea2.seminar.*;
-
 public enum Salutation {
 	       FRAU,
 	       HERR,

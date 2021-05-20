@@ -1,6 +1,6 @@
 package de.telekom.sea2.model;
 
-//import de.telekom.sea2.*;
+
 import de.telekom.sea2.lookup.*;
 import de.telekom.sea2.seminar.*;
 
