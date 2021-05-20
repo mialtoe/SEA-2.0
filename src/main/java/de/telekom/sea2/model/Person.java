@@ -26,9 +26,11 @@ public class Person extends BaseObject{
 		this.vorname = vorname;
 		this.nachname = nachname;
 		this.kundennummer= kdnr;
-		setId(kdnr+1);
+//		setId(kdnr+1);
 		this.anrede=anrede;
 	}
+	
+	
 	
 	public Salutation getAnrede() {
 		return anrede;
