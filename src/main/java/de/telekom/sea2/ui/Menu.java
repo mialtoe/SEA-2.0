@@ -48,6 +48,7 @@ public class Menu extends BaseObject {
 		System.out.println("* 4 - einzelne Person löschen  *");
 		System.out.println("* 5 - Person ändern            *");
 		System.out.println("* 6 - Anzahl Personen in DB    *");
+		System.out.println("* 7 - Person suchen            *");
 		System.out.println("* q - Beenden                  *");
 		System.out.println("********************************");
 	}
@@ -86,6 +87,18 @@ public class Menu extends BaseObject {
 		case "5":
 			System.out.println("5: bestehende Einträge ändern");
 			updatePerson();
+			break;
+		case "6":
+			System.out.println("6: Anzahl Einträge in DB");
+			int anz = pRepo.getCountDB();
+			if (anz > 0)
+				System.out.println("In der DB befinden sich "+anz+" Einträge");
+			else 
+				System.out.println("Keine Einträge in DB gefunden");
+			break;
+		case "7":
+			System.out.println("5: Person suchen");
+			searchPerson();
 			break;
 		case "q":
 			System.out.println("Beendet");
@@ -187,15 +200,26 @@ public class Menu extends BaseObject {
 	   }
 	}
 
-//	private void searchPerson() {
-//		String suchString;
-//		
-//		System.out.print("Bitte Suchstring (Vorname) eingeben: ");
-//		suchString = scanner.nextLine();
-//		MyList suchList=tList.search(suchString);
-//		System.out.println("Liste der gesuchten Personen mit beginendem Vornamen: "+suchString);
-//		listAllPerson(suchList); 
-//	}
+	private void searchPerson() throws Exception {
+		String suchString;
+		
+		System.out.print("Bitte Suchstring (Teil des Vor- oder Nachnamen) eingeben: ");
+		suchString = scanner.nextLine();
+		
+		Person[] pListe = pRepo.searchP(suchString);
+		if (pListe.length == 0)
+			System.out.println("kein Eintrag mit "+suchString+" gefunden!");
+		
+		for (int i=0; i < pListe.length; i++) {
+			   try {
+					Person p = (Person) pListe[i];   
+					System.out.println(i + ".: " + p.getAnrede() + " " + p.getVorname() + " " + p.getNachname()+" Kundennummer: "+p.getKundennummer());
+				}
+				catch (Exception re) {   
+				   System.out.println("kein gültiger Eintrag gefunden");
+				}
+		}
+	}
 	
 	private void updatePerson() throws Exception {
 		Salutation anrede;

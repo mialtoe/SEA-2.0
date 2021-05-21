@@ -80,6 +80,21 @@ public class PersonRepository extends BaseObject {
 	    } catch (Exception e) {return -1;}
 	}
 	
+    public int getCountDB () throws SQLException {            // ermittelt die höchste aktuelle ID (Kundennummer)
+	     	
+		int countRes=-1;
+		String selectString = "select count (*) from personen";
+	    try (PreparedStatement preparedStatement = connection.prepareStatement(selectString);){
+		   try {
+			   ResultSet resultSet = preparedStatement.executeQuery(selectString);
+			   resultSet.next();
+			   countRes = resultSet.getInt(1);   // Anzahl Einträge in DB
+			
+		       return countRes;
+		   } catch (Exception e) {return -1;}
+	    } catch (Exception e) {return -1;}
+	}
+	
 	public Person[] getAll() throws Exception {               // liest alle Personen aus DB
 //		Statement statement = connection.createStatement();
 		String selectString = "select * from personen order by ID desc";
@@ -110,6 +125,51 @@ public class PersonRepository extends BaseObject {
 			  }
 			
 //			statement.close();
+			return personen;
+			
+			
+		  } catch (Exception e) {}
+		} catch (Exception e) {}
+		return null;
+	}
+	
+	public Person[] searchP(String search) throws Exception {               // liest alle Personen aus DB
+//		String selectString = "select * from personen where vorname like ('%?%')";
+		String selectString = "select * from personen where vorname like ('%"
+				                 +search
+				                 +"%') or nachname like ('%"
+				                 +search
+				                 +"%')";
+//		System.out.println(selectString);
+		
+		try (PreparedStatement preparedStatement = connection.prepareStatement(selectString);){
+		
+		  try {
+			  int size = 0;
+//			  preparedStatement.setString(1, search);
+		      preparedStatement.executeQuery();
+			  ResultSet resultSet = preparedStatement.executeQuery(selectString);
+			  if (resultSet != null) 
+			  {
+			    resultSet.last();    // geht in die letzte Reihe
+			    size = resultSet.getRow(); // um die wievielte Reihe handelt es sich? 
+			    resultSet.beforeFirst();   // wieder zurück in vor die erste Reihe
+		      }
+			
+			  Person[] personen = new Person[size];   // Personenliste mit der Anzahl DB Einträgen
+			
+			  int i=0;
+			  while (resultSet.next()) {
+				Person p = new Person();
+				p.setKundennummer(resultSet.getLong(1));
+				p.setAnrede(resultSet.getByte(2));
+				p.setVorname(resultSet.getString(3));
+				p.setNachname(resultSet.getString(4));
+				personen[i] = p;
+				i++;
+				System.out.println("XXX"+resultSet.getString(3));
+			  }
+			
 			return personen;
 			
 			
