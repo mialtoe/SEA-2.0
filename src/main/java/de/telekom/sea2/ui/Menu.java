@@ -47,10 +47,7 @@ public class Menu extends BaseObject {
 //		System.out.println("* 3 - Liste löschen            *");
 		System.out.println("* 4 - einzelne Person löschen  *");
 		System.out.println("* 5 - Person ändern            *");
-//		System.out.println("* 5 - Person suchen            *");
-//		System.out.println("* 6 - Testdaten eintragen      *");
-//		System.out.println("* 7 - Liste aus Datei lesen    *");
-//		System.out.println("* 8 - Liste in Datei schreiben *");
+		System.out.println("* 6 - Anzahl Personen in DB    *");
 		System.out.println("* q - Beenden                  *");
 		System.out.println("********************************");
 	}
