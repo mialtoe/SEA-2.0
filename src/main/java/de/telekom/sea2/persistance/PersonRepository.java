@@ -4,16 +4,30 @@ package de.telekom.sea2.persistance;
 import de.telekom.sea2.model.Person;
 import de.telekom.sea2.seminar.BaseObject;
 import java.sql.*;
-
+/**
+ * 
+ * @author Michael Altoe
+ *
+ */
 public class PersonRepository extends BaseObject {
-
+    
 	private Connection connection;
    
-	
+	/**
+    * Konstruktor: Verbindung zur DB bestimmen
+    * @param co - DB Connection 
+	*/
 	public PersonRepository (Connection co) {         // neuer Konstruktor mit Übergabe
 		connection = co;		
 	}
 	
+	
+	/** 
+	 * Schreibt eine neue Person in die Datenbank
+	 * @param p -  beschreibt eine Person: Kundennummer, Anrede, Vorname, Nachname
+	 * @return  -  boolean --> true, falls Schreiben in DB erfolgreich  
+	 * @throws SQLException - wirft SQLException
+	 */
 	
 	public boolean create (Person p) throws SQLException{   // schreibt neue Person in DB
 	      
@@ -36,6 +50,14 @@ public class PersonRepository extends BaseObject {
 	   }
 	   return true;
 	}
+	
+	
+	/**
+	 * Liest die Daten einer Person (Kundennummer, Anrede, Vorname, Nachname aus der DB aus 
+	 * @param id    -  Kundennummer der gewünschten Person 
+	 * @return      -  p (Person)
+	 * @throws SQLException - wirft SQLException
+	 */
 	
 	public Person get (long id) throws SQLException {        // liest Person mit id aus DB
 			
@@ -63,6 +85,11 @@ public class PersonRepository extends BaseObject {
 		
 	}
 	
+	/**
+	 * Ermittelt den Eintrag mit der höchsten Kundennummer (ID) und gibt die ID zurück
+	 * @return - höchste Kundennummer oder -1 falls nicht erfolgreich
+	 * @throws SQLException - wirft SQLException
+	 */
 	public int getMaxId () throws SQLException {            // ermittelt die höchste aktuelle ID (Kundennummer)
 	     	
 		
@@ -80,6 +107,12 @@ public class PersonRepository extends BaseObject {
 	    } catch (Exception e) {return -1;}
 	}
 	
+	/**
+	 * Ermittelt die Anzahl Einträge (Personen) in der DB
+	 * @return  - Anzahl Personen in der DB
+	 * @throws SQLException - wirft SQLException
+	 */
+	
     public int getCountDB () throws SQLException {            // ermittelt die höchste aktuelle ID (Kundennummer)
 	     	
 		int countRes=-1;
@@ -94,7 +127,12 @@ public class PersonRepository extends BaseObject {
 		   } catch (Exception e) {return -1;}
 	    } catch (Exception e) {return -1;}
 	}
-	
+    
+	/**
+	 * Liest alle Einträge (Personen) aus der DB heraus und speichert diese in einem Personen - Array 
+	 * @return - gibt Liste der Personen zurück
+	 * @throws Exception - wirft Exception
+	 */
 	public Person[] getAll() throws Exception {               // liest alle Personen aus DB
 //		Statement statement = connection.createStatement();
 		String selectString = "select * from personen order by ID desc";
@@ -104,14 +142,16 @@ public class PersonRepository extends BaseObject {
 		  try {
 			  int size = 0;
 			  ResultSet resultSet = preparedStatement.executeQuery(selectString);
-			  if (resultSet != null) 
-			  {
-			    resultSet.last();    // geht in die letzte Reihe
-			    size = resultSet.getRow(); // um die wievielte Reihe handelt es sich? 
-			    resultSet.beforeFirst();   // wieder zurück in vor die erste Reihe
-		      }
+//			  if (resultSet != null) 
+//			  {
+//			    resultSet.last();    // geht in die letzte Reihe
+//			    size = resultSet.getRow(); // um die wievielte Reihe handelt es sich? 
+//			    resultSet.beforeFirst();   // wieder zurück in vor die erste Reihe
+//		      }
+			  
+			  size = this.getCountDB();
 			
-			  Person[] personen = new Person[size];   // Personenliste mit der Anzahl DB Einträgen
+			  Person[] personen = new Person[size];   // Personenliste erzeuge mit der Anzahl DB Einträgen
 			
 			  int i=0;
 			  while (resultSet.next()) {
@@ -133,6 +173,12 @@ public class PersonRepository extends BaseObject {
 		return null;
 	}
 	
+	/**
+	 * Sucht Einträge in der DB die den übergebenen Suchstring (search) enthalten. Gesucht wird in Vorname und Nachname
+	 * @param search    (- Suchstring
+	 * @return - Liste der gefunden Personen
+	 * @throws Exception - wirft Exception
+	 */
 	public Person[] searchP(String search) throws Exception {               // liest alle Personen aus DB
 //		String selectString = "select * from personen where vorname like ('%?%')";
 		String selectString = "select * from personen where vorname like ('%"
@@ -178,7 +224,12 @@ public class PersonRepository extends BaseObject {
 		return null;
 	}
 	
-	
+	/**
+	 * Löscht eine Person aus der DB - die Person wird über die Kundennummer identifiziert
+	 * @param id - entspricht Kundennummer
+	 * @return - boolean, true wenn Löschen erfolgreich
+	 * @throws SQLException - wirft SQLException
+	 */
 	public Boolean delete(long id) throws SQLException  {        // löscht Person mit id aus DB
 		String delString="delete from personen where ID=?";
 		
@@ -193,6 +244,12 @@ public class PersonRepository extends BaseObject {
 				
 	}
     
+	/**
+	 * Löscht eine Person aus der DB - aus der übergebenen Person wird wird die Kundennummer identifiziert und darüber gelöscht
+	 * @param person - beschreibt eine Person: Kundennummer, Anrede, Vorname, Nachname
+	 * @return - boolean, true wenn Löschen erfolgreich
+	 * @throws SQLException - wirft SQLException
+	 */
 	public Boolean delete(Person person) throws SQLException   {  // löscht Person aus DB
 		String delString="delete from personen where ID=?";
 		
@@ -206,6 +263,12 @@ public class PersonRepository extends BaseObject {
 		   return true;
 	}
 	
+	/**
+	 * Führt eine Änderung einer Person durch.   
+	 * @param person - beschreibt eine Person: Kundennummer, Anrede, Vorname, Nachname
+	 * @return - boolean, true wenn update erfolgreich
+	 * @throws SQLException - wirft SQLException
+	 */
     public boolean update (Person person) throws SQLException   {  // macht eine Namensänderung einer bestehenden Person
     	
 //		Statement statement = connection.createStatement();
