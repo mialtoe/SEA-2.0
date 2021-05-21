@@ -195,13 +195,15 @@ public class PersonRepository extends BaseObject {
 //			  preparedStatement.setString(1, search);
 		      preparedStatement.executeQuery();
 			  ResultSet resultSet = preparedStatement.executeQuery(selectString);
+			  
 			  if (resultSet != null) 
 			  {
 			    resultSet.last();    // geht in die letzte Reihe
 			    size = resultSet.getRow(); // um die wievielte Reihe handelt es sich? 
-			    resultSet.beforeFirst();   // wieder zurück in vor die erste Reihe
+			    resultSet.beforeFirst();   // wieder zurück  vor die erste Reihe
 		      }
-			
+			  
+			  
 			  Person[] personen = new Person[size];   // Personenliste mit der Anzahl DB Einträgen
 			
 			  int i=0;
@@ -213,7 +215,7 @@ public class PersonRepository extends BaseObject {
 				p.setNachname(resultSet.getString(4));
 				personen[i] = p;
 				i++;
-				System.out.println("XXX"+resultSet.getString(3));
+//				System.out.println("XXX"+resultSet.getString(3));
 			  }
 			
 			return personen;
@@ -291,7 +293,7 @@ public class PersonRepository extends BaseObject {
 		      preparedStatement.setString(2, person.getVorname());
 		      preparedStatement.setString(3, person.getNachname());
 		      preparedStatement.setLong(4, person.getKundennummer());
-		      preparedStatement.executeQuery();
+		      preparedStatement.execute();
 		   } catch (SQLException sqlException) {
 			   sqlException.printStackTrace();
 		       return false;
