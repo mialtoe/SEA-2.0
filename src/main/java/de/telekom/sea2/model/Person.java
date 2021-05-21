@@ -4,6 +4,11 @@ package de.telekom.sea2.model;
 import de.telekom.sea2.lookup.*;
 import de.telekom.sea2.seminar.*;
 
+/**
+ * 
+ * @author Michael Altoe
+ *
+ */
 public class Person extends BaseObject{
 
 	private String vorname;
@@ -11,17 +16,32 @@ public class Person extends BaseObject{
 	private Long kundennummer;
 	private Salutation anrede;
 	
-	 
+	/**
+	 * Konstruktor ohne Parameter 
+	 */
 	public Person() {                                   // Konstruktor ohne Überabeparameter
     }
 	
-	public Person(String vorname, String nachname, Salutation anrede) {    // Konstruktor mit Überabeparameter, verwendet in inputPerson
+	/**
+	 * Konstruktor mit Übergabeparameter der Person
+	 * @param vorname - Vorname
+	 * @param nachname - Nachname
+	 * @param anrede - Anrede
+	 */
+	public Person(String vorname, String nachname, Salutation anrede) {    // Konstruktor mit Überabeparameter
 		this.vorname = vorname;
 		this.nachname = nachname;
 		this.kundennummer= getId();
 		this.anrede=anrede;
 	}
 	
+	/**
+	 * Konstruktor mit Übergabeparameter der Person inklusive der Kundennummer (ID)
+	 * @param vorname - Vorname
+	 * @param nachname  - Nachname
+	 * @param kdnr - Kundennummer
+	 * @param anrede - Anrede
+	 */
 	public Person(String vorname, String nachname, long kdnr, Salutation anrede) {    // Konstruktor mit Überabeparameter
 		this.vorname = vorname;
 		this.nachname = nachname;
@@ -31,46 +51,85 @@ public class Person extends BaseObject{
 	}
 	
 	
-	
+	/**
+	 * Getter 
+	 * @return - Anrede
+	 */
 	public Salutation getAnrede() {
 		return anrede;
 	}
 
+	/**
+	 * Setter
+	 * @param anrede - Anrede
+	 */
 	public void setAnrede(Salutation anrede) {
 		this.anrede = anrede;
 	}
 	
+	/**
+	 * Setter 
+	 * @param b - in DB ist die Anrede als Byte abgelegt
+	 */
 	public void setAnrede(byte b) {
 		this.anrede = Salutation.fromByte(b);
 	}
 	
+	/**
+	 * Setter
+	 * @param vorname - Vorname
+	 */
 	public void setVorname (String vorname) {
         this.vorname= vorname;
     }
 	   
+	/**
+	 * Setter 
+	 * @param nachname - Nachname
+	 */
 	public void setNachname (String nachname) {
         this.nachname= nachname;
     }
 	
+	/**
+	 * Setter
+	 * @param kdnr Kundennummer (ID)
+	 */
 	public void setKundennummer (long kdnr) {
         this.kundennummer=kdnr;
     }
 	
+	/**
+	 * Setter ohne Parameter
+	 */
 	public void setKundennummer () {
         this.kundennummer=getId();
     }
 	
+	/**
+	 * Getter
+	 * @return - Vorname
+	 */
 	public String getVorname () {
         return this.vorname;
     }
 	   
+	/**
+	 * Getter
+	 * @return - Nachname
+	 */
 	public String getNachname () {
         return this.nachname;
     }
 			
+	/**
+	 * Getter
+	 * @return - Kundennummer (ID) 
+	 */
 	public Long getKundennummer () {
         return this.kundennummer;
     }
+	
 	
 	@Override
 	public boolean equals(Object p1) {

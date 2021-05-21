@@ -10,12 +10,22 @@ import java.sql.*;
 
 
 public class SeminarApp extends BaseObject{
-	
+	/**
+	 * Klasse zum Aufruf der Haupt-Funktionalität
+	 */
 	private static SeminarApp theInstance;
 	 
+	/**
+	 * Konstruktor
+	 */
 	 private SeminarApp() {    // constructor
 	 }
 	  
+	 /**
+	  * Main- Runmethode, erstellt Verbindung zur DB, erstellt ein neues Repository + Menü und hält dann das Menü am Leben 
+	  * @param args - Main Parameter
+	  * @throws IOException - wirft IOException
+	  */
 	 public void run(String[] args) throws IOException{
  	    Person child= new Person();
  	    child.setParent(this);
