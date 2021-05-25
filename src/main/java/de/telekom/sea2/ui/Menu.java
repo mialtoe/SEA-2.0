@@ -6,6 +6,7 @@ import de.telekom.sea2.persistance.*;
 import de.telekom.sea2.lookup.*;
 import de.telekom.sea2.seminar.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 
@@ -92,7 +93,7 @@ public class Menu extends BaseObject {
 			System.out.println("6: Anzahl Einträge in DB");
 			int anz = pRepo.getCountDB();
 			if (anz > 0)
-				System.out.println("In der DB befinden sich "+anz+" Einträge");
+				System.out.println(String.format("In der DB befinden sich %d Einträge",anz));
 			else 
 				System.out.println("Keine Einträge in DB gefunden");
 			break;
@@ -185,14 +186,14 @@ public class Menu extends BaseObject {
 	private void listAllPerson() throws Exception {
 	   
 	    
-	   Person[] pListe = pRepo.getAll();
+	   ArrayList<Person> pListe = pRepo.getAll();
 	   
 	   
 	   System.out.println("Aktuelle Komplettliste in DB");
-	   for (int i=0; i < pListe.length; i++) {
+	   for (int i=0; i < pListe.size(); i++) {
 		   try {
-				Person p = (Person) pListe[i];   
-				System.out.println(i + ".: " + p.getAnrede() + " " + p.getVorname() + " " + p.getNachname()+" Kundennummer: "+p.getKundennummer());
+				Person p = (Person) pListe.get(i);   
+				System.out.println(String.format("%d %s %s %s  Kundennummer: %d",i,p.getAnrede(), p.getVorname(),p.getNachname(),p.getKundennummer()));
 			}
 			catch (Exception re) {   
 			   System.out.println("kein gültiger Eintrag gefunden");
@@ -208,12 +209,13 @@ public class Menu extends BaseObject {
 		
 		Person[] pListe = pRepo.searchP(suchString);
 		if (pListe.length == 0)
-			System.out.println("kein Eintrag mit "+suchString+" gefunden!");
+			System.out.println(String.format("kein Eintrag mit %s gefunden!",suchString));
 		
 		for (int i=0; i < pListe.length; i++) {
 			   try {
 					Person p = (Person) pListe[i];   
-					System.out.println(i + ".: " + p.getAnrede() + " " + p.getVorname() + " " + p.getNachname()+" Kundennummer: "+p.getKundennummer());
+					System.out.println(String.format("%d %s %s %s  Kundennummer: %d",i,p.getAnrede(), p.getVorname(),p.getNachname(),p.getKundennummer()));
+//					System.out.println(i + ".: " + p.getAnrede() + " " + p.getVorname() + " " + p.getNachname()+" Kundennummer: "+p.getKundennummer());
 				}
 				catch (Exception re) {   
 				   System.out.println("kein gültiger Eintrag gefunden");
@@ -232,13 +234,14 @@ public class Menu extends BaseObject {
 		if (p.getKundennummer() != null) {
 		
    		   anrede = p.getAnrede();
-		   System.out.println("Zu ändernder Datensatz: ID "+ p.getKundennummer()+" "+anrede+" "+p.getVorname()+" "+p.getNachname());
+		   System.out.println(String.format("Zu ändernder Datensatz: %d %s %s %s",p.getKundennummer(),p.getAnrede(), p.getVorname(),p.getNachname()));
+//   	   System.out.println("Zu ändernder Datensatz: ID "+ p.getKundennummer()+" "+anrede+" "+p.getVorname()+" "+p.getNachname());
 		   showAenderungsMenu();
 		
 		   result = inputMenu();
 		   try {
 			   String aenderung = checkAenderungsMenu(result);
-			   System.out.println("geänderter Text:"+aenderung);
+			   System.out.println(String.format("geänderter Text: %s",aenderung));
 			   switch (result) {
 			   case "1":
 				   p.setAnrede(Salutation.fromString(aenderung));
@@ -255,6 +258,7 @@ public class Menu extends BaseObject {
 			   pRepo.update(p);
 		    	  
 		   } catch (IOException e) {
+			   
 			   e.printStackTrace();}
 		 } else 
 			 System.out.println("ID nicht gefunden!");
