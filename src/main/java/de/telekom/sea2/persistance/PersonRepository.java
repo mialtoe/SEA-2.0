@@ -4,6 +4,7 @@ package de.telekom.sea2.persistance;
 import de.telekom.sea2.model.Person;
 import de.telekom.sea2.seminar.BaseObject;
 import java.sql.*;
+import java.util.ArrayList;
 /**
  * 
  * @author Michael Altoe
@@ -43,7 +44,7 @@ public class PersonRepository extends BaseObject {
 	      preparedStatement.setInt(2, anrede);
 	      preparedStatement.setString(3, vorname);
 	      preparedStatement.setString(4, nachname);
-	      preparedStatement.execute();
+	      preparedStatement.executeQuery();
 	   } catch (SQLException sqlException) {
 		   sqlException.printStackTrace();
 	       return false;
@@ -95,7 +96,7 @@ public class PersonRepository extends BaseObject {
 		
 	    int maxId=0;
 //		Statement statement = connection.createStatement();
-	    String selectString = "select * from personen order by ID desc";
+	    String selectString = "select * from personen order by ID desc limit 1";     // absteigend sortiert nach ID und dann, nur 1. Zeile interessiert
 	    try (PreparedStatement preparedStatement = connection.prepareStatement(selectString);){
 		   try {
 			   ResultSet resultSet = preparedStatement.executeQuery(selectString);
@@ -103,8 +104,8 @@ public class PersonRepository extends BaseObject {
 			   maxId = resultSet.getInt(1);   // höchste Kundennummer
 			
 		       return maxId;
-		   } catch (Exception e) {return -1;}
-	    } catch (Exception e) {return -1;}
+		   } catch (Exception e) {return 0;}  // kein Eintrag vorhanden
+	    } catch (Exception e) {return 0;}
 	}
 	
 	/**
@@ -133,35 +134,37 @@ public class PersonRepository extends BaseObject {
 	 * @return - gibt Liste der Personen zurück
 	 * @throws Exception - wirft Exception
 	 */
-	public Person[] getAll() throws Exception {               // liest alle Personen aus DB
+	public ArrayList<Person>  getAll() throws Exception {               // liest alle Personen aus DB
 //		Statement statement = connection.createStatement();
 		String selectString = "select * from personen order by ID desc";
 		
 		try (PreparedStatement preparedStatement = connection.prepareStatement(selectString);){
 		
 		  try {
-			  int size = 0;
 			  ResultSet resultSet = preparedStatement.executeQuery(selectString);
-//			  if (resultSet != null) 
+//			  if (resultSet != null)                       // findet im resultSet heraus, wieviele Einträge es gibt 
 //			  {
 //			    resultSet.last();    // geht in die letzte Reihe
 //			    size = resultSet.getRow(); // um die wievielte Reihe handelt es sich? 
 //			    resultSet.beforeFirst();   // wieder zurück in vor die erste Reihe
 //		      }
 			  
-			  size = this.getCountDB();
+//			  int size = 0;                 
+//			  size = this.getCountDB();       // ermittelt in DB die Einträge 
+//			  Person[] personen = new Person[size];   // Personenliste erzeugt mit der Anzahl DB Einträgen, ALternative zu ArrayList
+			  
+			  ArrayList<Person> personen = new ArrayList<Person>();   // Personenliste erzeugt mit der Anzahl DB Einträgen
 			
-			  Person[] personen = new Person[size];   // Personenliste erzeuge mit der Anzahl DB Einträgen
-			
-			  int i=0;
+//			  int i=0;
 			  while (resultSet.next()) {
 				Person p = new Person();
 				p.setKundennummer(resultSet.getLong(1));
 				p.setAnrede(resultSet.getByte(2));
 				p.setVorname(resultSet.getString(3));
 				p.setNachname(resultSet.getString(4));
-				personen[i] = p;
-				i++;
+//				personen[i] = p;     // wenn Personen[] statt ArrayList verwendet wird
+				personen.add(p);
+//				i++;
 			  }
 			
 //			statement.close();
@@ -237,12 +240,16 @@ public class PersonRepository extends BaseObject {
 		
 		try (PreparedStatement preparedStatement = connection.prepareStatement(delString);){
 		      preparedStatement.setLong(1, id);
-		      preparedStatement.executeQuery();
+		      ResultSet resultSet = preparedStatement.executeQuery();
+		      if (resultSet.next()) 
+		    	  return true;
+		      else
+		    	  return false;
 		   } catch (SQLException sqlException) {
 			   sqlException.printStackTrace();
 		       return false;
 		   }
-		   return true;
+		   
 				
 	}
     
@@ -257,12 +264,15 @@ public class PersonRepository extends BaseObject {
 		
 		try (PreparedStatement preparedStatement = connection.prepareStatement(delString);){
 		      preparedStatement.setLong(1, person.getKundennummer());
-		      preparedStatement.executeQuery();
+		      ResultSet resultSet = preparedStatement.executeQuery();
+		      if (resultSet.next()) 
+		    	  return true;
+		      else
+		    	  return false;
 		   } catch (SQLException sqlException) {
 			   sqlException.printStackTrace();
 		       return false;
 		   }
-		   return true;
 	}
 	
 	/**
@@ -293,7 +303,7 @@ public class PersonRepository extends BaseObject {
 		      preparedStatement.setString(2, person.getVorname());
 		      preparedStatement.setString(3, person.getNachname());
 		      preparedStatement.setLong(4, person.getKundennummer());
-		      preparedStatement.execute();
+		      preparedStatement.executeQuery();
 		   } catch (SQLException sqlException) {
 			   sqlException.printStackTrace();
 		       return false;
