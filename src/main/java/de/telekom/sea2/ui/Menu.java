@@ -224,7 +224,7 @@ public class Menu extends BaseObject {
 	}
 	
 	private void updatePerson() throws Exception {
-		Salutation anrede;
+//		Salutation anrede;
 		
 		System.out.print("Bitte ID der zu ändernden Person eingeben: ");
 		int id = scanner.nextInt();
@@ -233,7 +233,7 @@ public class Menu extends BaseObject {
 		Person p = pRepo.get(id);
 		if (p.getKundennummer() != null) {
 		
-   		   anrede = p.getAnrede();
+//   		   anrede = p.getAnrede();
 		   System.out.println(String.format("Zu ändernder Datensatz: %d %s %s %s",p.getKundennummer(),p.getAnrede(), p.getVorname(),p.getNachname()));
 //   	   System.out.println("Zu ändernder Datensatz: ID "+ p.getKundennummer()+" "+anrede+" "+p.getVorname()+" "+p.getNachname());
 		   showAenderungsMenu();
